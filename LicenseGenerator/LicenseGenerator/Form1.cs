@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Windows.Forms;
+using LicenseGenerator.Properties;
 
 namespace LicenseGenerator
 {
@@ -8,7 +9,14 @@ namespace LicenseGenerator
     {
         public SqlConnection Connection;
         public SqlCommand Command;
+        private bool error = false;
+        private bool isChangedUsername = false;
+        private bool isChangedStartingDate = false;
+        private bool isChangedExpirationDate = false;
         private int _error = 0;
+        private bool isOpened = false;
+        private const string _version = "1.0.2";
+
         public Form1()
         {
             InitializeComponent();
@@ -60,6 +68,159 @@ namespace LicenseGenerator
             return new string(pass);
         }
 
+        #region GetFromDB
+
+        private DateTime GetStartingDateFromDB()
+        {
+            Connection.Open();
+        
+            string query = "SELECT StartingDate " +
+                           "FROM tblLicense " +
+                           "WHERE LicenseKey = @LicenseKey";
+
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@LicenseKey", tbLicenseKeyUpdate.Text);
+
+            object StartingDate = Command.ExecuteScalar();
+            Connection.Close();
+
+            if (StartingDate == DBNull.Value)
+            {
+                return DateTime.Now;
+            }
+
+            return (DateTime)StartingDate;
+        }
+
+        private DateTime GetExpirationDateFromDB()
+        {
+            Connection.Open();
+
+            string query = "SELECT ExpirationDate " +
+                           "FROM tblLicense " +
+                           "WHERE LicenseKey = @LicenseKey";
+
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@LicenseKey", tbLicenseKeyUpdate.Text);
+
+            object ExpirationDate = Command.ExecuteScalar();
+            Connection.Close();
+
+            if (ExpirationDate == DBNull.Value)
+            {
+                return DateTime.Now;
+            }
+
+            return (DateTime)ExpirationDate;
+
+        }
+
+        private int GetDateLimitFromDB()
+        {
+            Connection.Open();
+
+            string query = "SELECT DateLimit " +
+                           "FROM tblLicense " +
+                           "WHERE LicenseKey = @LicenseKey";
+
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@LicenseKey", tbLicenseKeyUpdate.Text);
+
+            int DateLimit = (int)Command.ExecuteScalar();
+
+            Connection.Close();
+        
+            return DateLimit;
+        }
+
+        private string GetUsernameFromDB()
+        {
+            Connection.Open();
+
+            string query = "SELECT Username " +
+                           "FROM tblLicense " +
+                           "WHERE LicenseKey = @LicenseKey";
+
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@LicenseKey", tbLicenseKeyUpdate.Text);
+
+            object tbUsernameUpdate = Command.ExecuteScalar();
+
+            Connection.Close();
+            if (tbUsernameUpdate != DBNull.Value)
+            {
+                return tbUsernameUpdate.ToString();
+            }
+
+            return DBNull.Value.ToString();
+        }
+
+        private bool GetIsUsableFromDB()
+        {
+            Connection.Open();
+
+            string query = "SELECT IsUsed " +
+                           "FROM tblLicense " +
+                           "WHERE LicenseKey = @LicenseKey";
+
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@LicenseKey", tbLicenseKeyUpdate.Text);
+
+            bool IsUsed = !(bool)Command.ExecuteScalar();
+
+            Connection.Close();
+            return IsUsed;
+        }
+
+        #endregion
+
+        #region SetToDB
+
+        private void SetDatasToTB(string licenseKey)
+        {
+            string query = "UPDATE tblLicense " +
+                           "SET IsUsed = @IsUsed , DateLimit = @DateLimit";
+
+            if (isChangedStartingDate)
+            {
+                query += " , StartingDate = @StartingDate";
+            }
+            if (isChangedExpirationDate)
+            {
+                query += " , ExpirationDate = @ExpirationDate";
+            }
+            if (isChangedUsername)
+            {
+                query += " , Username = @Username";
+            }
+
+            query += " WHERE LicenseKey = @LicenseKey";
+
+            Connection.Open();
+
+            Command = new SqlCommand(query, Connection);
+            if (cbIsUsableUpdate.Text == "Usable")
+            {
+                Command.Parameters.AddWithValue("@IsUsed", 0);
+            }
+            else
+            {
+                Command.Parameters.AddWithValue("@IsUsed", 1);
+            }
+
+            Command.Parameters.AddWithValue("@StartingDate", dtpStartingDateUpdate.Value);
+            Command.Parameters.AddWithValue("@ExpirationDate", dtpExpirationDateUpdate.Value);
+            Command.Parameters.AddWithValue("@Username", tbUsernameUpdate.Text);
+            Command.Parameters.AddWithValue("@DateLimit", tbDateLimitUpdate.Text);
+            Command.Parameters.AddWithValue("@LicenseKey", licenseKey);
+
+            Command.ExecuteNonQuery();
+
+            Connection.Close();
+        }
+
+        #endregion
+
         private void SaveLicense(string licenseKey, int dateLimit)
         {
             Connection.Open();
@@ -92,6 +253,34 @@ namespace LicenseGenerator
             }
         }
 
+        private void RemoveLicense(string licenseKey)
+        {
+            string query = "DELETE FROM tblLicense " +
+                          "WHERE LicenseKey = @LicenseKey";
+            try
+            {
+                Connection.Open();
+                Command = new SqlCommand(query, Connection);
+                Command.Parameters.AddWithValue("@LicenseKey", licenseKey);
+                Command.ExecuteNonQuery();
+                MessageBox.Show($"'{tbLicenseKeyUpdate.Text}' numaralı lisans silindi.", "Lisans Silindi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                tbLicenseKeyUpdate.Text = String.Empty;
+                tbUsernameUpdate.Text = String.Empty;
+                tbDateLimitUpdate.Text = String.Empty;
+                cbIsUsableUpdate.Text = String.Empty;
+                dtpStartingDateUpdate.Value = DateTime.Now;
+                dtpExpirationDateUpdate.Value = DateTime.Now;
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.ToString());
+            }
+            finally
+            {
+                Connection.Close();
+            }
+        }
+
         private void tbDateLimit_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar) &&
@@ -100,6 +289,110 @@ namespace LicenseGenerator
                 e.Handled = true;
             }
 
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.Text += $" [v{_version}]";
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (isOpened)
+            {
+                this.Width = 506;
+                this.Height = 154;
+                btnOpen.Text = ">>";
+                isOpened = false;
+            }
+            else if (!isOpened)
+            {
+                this.Width = 999;
+                this.Height = 154;
+                btnOpen.Text = "<<";
+                isOpened = true;
+            }
+        }
+
+        private void btnGetir_Click(object sender, EventArgs e)
+        {
+            if (tbLicenseKeyUpdate.Text.Length == tbLicenseKeyUpdate.MaxLength)
+            {
+                try
+                {
+                    tbDateLimitUpdate.Text = GetDateLimitFromDB().ToString();
+                    tbUsernameUpdate.Text = GetUsernameFromDB();
+                    cbIsUsableUpdate.Text = GetIsUsableFromDB() ? cbIsUsableUpdate.Items[0].ToString() : cbIsUsableUpdate.Items[1].ToString();
+                    dtpStartingDateUpdate.Value = GetStartingDateFromDB();
+                    dtpExpirationDateUpdate.Value = GetExpirationDateFromDB();
+                    this.Width = 999;
+                    this.Height = 271;
+                }
+                catch
+                {
+                    MessageBox.Show(string.Format(Resources.Lisans_Bilgisine_Ulasilamadi, tbLicenseKeyUpdate.Text), "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Connection.Close();
+                }
+            }
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            RemoveLicense(tbLicenseKeyUpdate.Text);
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SetDatasToTB(tbLicenseKeyUpdate.Text);
+                MessageBox.Show(string.Format(Resources.Lisans_Bilgileri_Güncellendi, tbLicenseKeyUpdate.Text),
+                    "Lisans Güncellemesi Başarılı", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            catch
+            {
+                MessageBox.Show(string.Format(Resources.Lisans_Bilgileri_Güncellenemedi, tbLicenseKeyUpdate.Text),
+                    "HATA", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                isChangedStartingDate = false;
+                isChangedExpirationDate = false;
+                isChangedUsername = false;
+            }
+        }
+        
+        private void DtpStartingDateUpdate_DropDown(object sender, EventArgs e) => isChangedStartingDate = true;
+
+        private void dtpExpirationDateUpdate_DropDown(object sender, EventArgs e) => isChangedExpirationDate = true;
+
+        private void tbUsernameUpdate_TextChanged(object sender, EventArgs e) => isChangedUsername = true;
+
+        private void btnNULL_1_Click(object sender, EventArgs e)
+        {
+            string query = "UPDATE tblLicense " +
+                           " SET StartingDate = @StartingDate " +
+                           " WHERE LicenseKey = '" + tbLicenseKeyUpdate.Text + "'";
+
+            Connection.Open();
+            Command = new SqlCommand(query, Connection);
+            Command.Parameters.AddWithValue("@StartingDate", DBNull.Value);
+            Command.ExecuteNonQuery();
+            Connection.Close();
+            isChangedStartingDate = false;
+        }
+
+        private void btnNULL_2_Click(object sender, EventArgs e)
+        {
+            string query = "UPDATE tblLicense " +
+                           "SET ExpirationDate = " + DBNull.Value +
+                           "WHERE LicenseKey = " + tbLicenseKeyUpdate.Text;
+
+            Connection.Open();
+            Command = new SqlCommand(query, Connection);
+            Command.ExecuteNonQuery();
+            Connection.Close();
+            isChangedExpirationDate = false;
         }
     }
 }
