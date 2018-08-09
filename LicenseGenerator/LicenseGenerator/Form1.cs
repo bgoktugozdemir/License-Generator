@@ -15,7 +15,7 @@ namespace LicenseGenerator
         private bool isChangedExpirationDate = false;
         private int _error = 0;
         private bool isOpened = false;
-        private const string _version = "1.0.2";
+        private const string _version = "1.0.3";
 
         public Form1()
         {
@@ -393,6 +393,18 @@ namespace LicenseGenerator
             Command.ExecuteNonQuery();
             Connection.Close();
             isChangedExpirationDate = false;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            Form2 form2 = new Form2(this);
+            form2.Show();
+        }
+
+        public void FillUpdateLicense(string license, object sender, EventArgs e)
+        {
+            tbLicenseKeyUpdate.Text = license;
+            btnGetir_Click(sender, e);
         }
     }
 }

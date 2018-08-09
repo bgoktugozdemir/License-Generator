@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.tbLicenseKey = new System.Windows.Forms.TextBox();
             this.tbDateLimit = new System.Windows.Forms.TextBox();
             this.btnGenerate = new System.Windows.Forms.Button();
@@ -39,6 +40,8 @@
             this.btnGetir = new System.Windows.Forms.Button();
             this.tbLicenseKeyUpdate = new System.Windows.Forms.TextBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.btnNULL_2 = new System.Windows.Forms.Button();
+            this.btnNULL_1 = new System.Windows.Forms.Button();
             this.cbIsUsableUpdate = new System.Windows.Forms.ComboBox();
             this.tbUsernameUpdate = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -51,11 +54,15 @@
             this.label4 = new System.Windows.Forms.Label();
             this.tbDateLimitUpdate = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
-            this.btnNULL_1 = new System.Windows.Forms.Button();
-            this.btnNULL_2 = new System.Windows.Forms.Button();
+            this.tblLicenseBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.dOVIZDataSet = new LicenseGenerator.DOVIZDataSet();
+            this.tblLicenseTableAdapter = new LicenseGenerator.DOVIZDataSetTableAdapters.tblLicenseTableAdapter();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tblLicenseBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dOVIZDataSet)).BeginInit();
             this.SuspendLayout();
             // 
             // tbLicenseKey
@@ -127,6 +134,7 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.button1);
             this.groupBox2.Controls.Add(this.label2);
             this.groupBox2.Controls.Add(this.btnGetir);
             this.groupBox2.Controls.Add(this.tbLicenseKeyUpdate);
@@ -193,10 +201,35 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Lisans Güncelle";
             // 
+            // btnNULL_2
+            // 
+            this.btnNULL_2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnNULL_2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNULL_2.Location = new System.Drawing.Point(753, 78);
+            this.btnNULL_2.Name = "btnNULL_2";
+            this.btnNULL_2.Size = new System.Drawing.Size(62, 25);
+            this.btnNULL_2.TabIndex = 19;
+            this.btnNULL_2.Text = "NULL";
+            this.btnNULL_2.UseVisualStyleBackColor = true;
+            this.btnNULL_2.Click += new System.EventHandler(this.btnNULL_2_Click);
+            // 
+            // btnNULL_1
+            // 
+            this.btnNULL_1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnNULL_1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnNULL_1.Location = new System.Drawing.Point(753, 30);
+            this.btnNULL_1.Name = "btnNULL_1";
+            this.btnNULL_1.Size = new System.Drawing.Size(62, 25);
+            this.btnNULL_1.TabIndex = 18;
+            this.btnNULL_1.Text = "NULL";
+            this.btnNULL_1.UseVisualStyleBackColor = true;
+            this.btnNULL_1.Click += new System.EventHandler(this.btnNULL_1_Click);
+            // 
             // cbIsUsableUpdate
             // 
             this.cbIsUsableUpdate.FormattingEnabled = true;
             this.cbIsUsableUpdate.Items.AddRange(new object[] {
+            "",
             "Usable",
             "Not Usable"});
             this.cbIsUsableUpdate.Location = new System.Drawing.Point(310, 75);
@@ -325,37 +358,37 @@
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
-            // btnNULL_1
+            // tblLicenseBindingSource
             // 
-            this.btnNULL_1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnNULL_1.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNULL_1.Location = new System.Drawing.Point(753, 30);
-            this.btnNULL_1.Name = "btnNULL_1";
-            this.btnNULL_1.Size = new System.Drawing.Size(62, 25);
-            this.btnNULL_1.TabIndex = 18;
-            this.btnNULL_1.Text = "NULL";
-            this.btnNULL_1.UseVisualStyleBackColor = true;
-            this.btnNULL_1.Click += new System.EventHandler(this.btnNULL_1_Click);
+            this.tblLicenseBindingSource.DataMember = "tblLicense";
+            this.tblLicenseBindingSource.DataSource = this.dOVIZDataSet;
             // 
-            // btnNULL_2
+            // dOVIZDataSet
             // 
-            this.btnNULL_2.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.btnNULL_2.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNULL_2.Location = new System.Drawing.Point(753, 78);
-            this.btnNULL_2.Name = "btnNULL_2";
-            this.btnNULL_2.Size = new System.Drawing.Size(62, 25);
-            this.btnNULL_2.TabIndex = 19;
-            this.btnNULL_2.Text = "NULL";
-            this.btnNULL_2.UseVisualStyleBackColor = true;
-            this.btnNULL_2.Click += new System.EventHandler(this.btnNULL_2_Click);
+            this.dOVIZDataSet.DataSetName = "DOVIZDataSet";
+            this.dOVIZDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+            // 
+            // tblLicenseTableAdapter
+            // 
+            this.tblLicenseTableAdapter.ClearBeforeFill = true;
+            // 
+            // button1
+            // 
+            this.button1.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.button1.Location = new System.Drawing.Point(296, 27);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(177, 30);
+            this.button1.TabIndex = 8;
+            this.button1.Text = "Lisansları Görüntüle";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // Form1
             // 
-            this.AcceptButton = this.btnGenerate;
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 21F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(495, 115);
+            this.ClientSize = new System.Drawing.Size(983, 232);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.btnOpen);
@@ -377,6 +410,8 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.tblLicenseBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dOVIZDataSet)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -409,6 +444,10 @@
         private System.Windows.Forms.ComboBox cbIsUsableUpdate;
         private System.Windows.Forms.Button btnNULL_2;
         private System.Windows.Forms.Button btnNULL_1;
+        private DOVIZDataSet dOVIZDataSet;
+        private System.Windows.Forms.BindingSource tblLicenseBindingSource;
+        private DOVIZDataSetTableAdapters.tblLicenseTableAdapter tblLicenseTableAdapter;
+        private System.Windows.Forms.Button button1;
     }
 }
 

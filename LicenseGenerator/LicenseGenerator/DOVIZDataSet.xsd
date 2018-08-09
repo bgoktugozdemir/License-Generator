@@ -79,7 +79,16 @@ SELECT LicenseKey, DateLimit, StartingDate, ExpirationDate, Username, IsUsed FRO
               <Mapping SourceColumn="Username" DataSetColumn="Username" />
               <Mapping SourceColumn="IsUsed" DataSetColumn="IsUsed" />
             </Mappings>
-            <Sources />
+            <Sources>
+              <DbSource ConnectionRef="DOVIZConnectionString (Settings)" DbObjectName="DOVIZ.dbo.tblLicense" DbObjectType="Table" FillMethodModifier="Public" FillMethodName="FillBy" GenerateMethods="Fill" GenerateShortCommands="true" GeneratorSourceName="FillBy" QueryType="Rowset" ScalarCallRetval="System.Object, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" UseOptimisticConcurrency="true" UserGetMethodName="GetDataBy" UserSourceName="FillBy">
+                <SelectCommand>
+                  <DbCommand CommandType="Text" ModifiedByUser="false">
+                    <CommandText>SELECT LicenseKey, DateLimit, StartingDate, ExpirationDate, Username, IsUsed FROM dbo.tblLicense</CommandText>
+                    <Parameters />
+                  </DbCommand>
+                </SelectCommand>
+              </DbSource>
+            </Sources>
           </TableAdapter>
         </Tables>
         <Sources />
@@ -89,7 +98,7 @@ SELECT LicenseKey, DateLimit, StartingDate, ExpirationDate, Username, IsUsed FRO
   <xs:element name="DOVIZDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="DOVIZDataSet" msprop:Generator_UserDSName="DOVIZDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="tblLicense" msprop:Generator_TableClassName="tblLicenseDataTable" msprop:Generator_TableVarName="tabletblLicense" msprop:Generator_TablePropName="tblLicense" msprop:Generator_RowDeletingName="tblLicenseRowDeleting" msprop:Generator_RowChangingName="tblLicenseRowChanging" msprop:Generator_RowEvHandlerName="tblLicenseRowChangeEventHandler" msprop:Generator_RowDeletedName="tblLicenseRowDeleted" msprop:Generator_UserTableName="tblLicense" msprop:Generator_RowChangedName="tblLicenseRowChanged" msprop:Generator_RowEvArgName="tblLicenseRowChangeEvent" msprop:Generator_RowClassName="tblLicenseRow">
+        <xs:element name="tblLicense" msprop:Generator_TableClassName="tblLicenseDataTable" msprop:Generator_TableVarName="tabletblLicense" msprop:Generator_RowChangedName="tblLicenseRowChanged" msprop:Generator_TablePropName="tblLicense" msprop:Generator_RowDeletingName="tblLicenseRowDeleting" msprop:Generator_RowChangingName="tblLicenseRowChanging" msprop:Generator_RowEvHandlerName="tblLicenseRowChangeEventHandler" msprop:Generator_RowDeletedName="tblLicenseRowDeleted" msprop:Generator_RowClassName="tblLicenseRow" msprop:Generator_UserTableName="tblLicense" msprop:Generator_RowEvArgName="tblLicenseRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="LicenseKey" msprop:Generator_ColumnVarNameInTable="columnLicenseKey" msprop:Generator_ColumnPropNameInRow="LicenseKey" msprop:Generator_ColumnPropNameInTable="LicenseKeyColumn" msprop:Generator_UserColumnName="LicenseKey">
